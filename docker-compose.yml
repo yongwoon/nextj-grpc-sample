@@ -11,6 +11,7 @@ services:
       - "50051:50051"
     networks:
       - dev_next_grpc_network
+
   envoy:
     image: envoyproxy/envoy:v1.30.4 # https://github.com/envoyproxy/envoy/tags
     ports:
@@ -19,6 +20,7 @@ services:
       - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
     depends_on:
       - backend
+
   frontend:
     container_name: dev_next_grpc_frontend
     build:
@@ -27,6 +29,8 @@ services:
     stdin_open: true
     tty: true
     command: npm run dev
+    depends_on:
+      - envoy
     volumes:
       - ./frontend:/var/www
     ports:
@@ -66,7 +70,6 @@ services:
 
 networks:
   dev_next_grpc_network:
-    external: true
 
 volumes:
   dev_next_grpc_db_volume:
