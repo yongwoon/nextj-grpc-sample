@@ -1,14 +1,27 @@
 services:
-  app:
-    container_name: dev_next_grpc_app
+  backend:
+    container_name: dev_next_grpc_backend
+    build: ./backend
+    stdin_open: true
+    tty: true
+    command: poetry run python server/server.py
+    volumes:
+      - ./backend:/var/www
+    ports:
+      - "50051:50051"
+    networks:
+      - dev_next_grpc_network
+
+  frontend:
+    container_name: dev_next_grpc_frontend
     build:
-      context: ./
+      context: ./frontend
       dockerfile: Dockerfile.local
     stdin_open: true
     tty: true
     command: npm run dev
     volumes:
-      - ./:/var/www
+      - ./frontend:/var/www
     ports:
       - "8000:8000"
     networks:
