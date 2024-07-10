@@ -1,6 +1,3 @@
-# docs.google.com/spreadsheets/d/125B6eMj5bOJDxHY-QIlOlu-9ajSQjJqBtD_3dbczEBs/edit#gid=0
-# https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
-
 # base ----------------------------------------------------------------------
 FROM node:20.15.0-alpine AS base
 
@@ -17,18 +14,28 @@ RUN npm ci
 # builder ----------------------------------------------------------------------
 FROM base AS builder
 
-RUN mkdir -p /var/www
-WORKDIR /var/www/
+ENV APP_ROOT /var/www
+
+RUN mkdir -p $APP_ROOT
+WORKDIR $APP_ROOT
 COPY --from=deps /var/www/node_modules ./node_modules
 COPY . .
+
+# grpc-tools のインストール
+RUN npm install -g grpc-tools protoc-gen-grpc-web
+
+# プロトコルバッファー生成スクリプトの実行
+COPY ./generate_protos.sh .
+RUN chmod +x ./generate_protos.sh && ./generate_protos.sh
 
 RUN npm run build
 
 # runner ----------------------------------------------------------------------
 FROM base AS runner
 
+ENV APP_ROOT /var/www
 ENV NODE_ENV production
-ENV PORT 3000
+ENV PORT 8000
 ENV HOSTNAME "0.0.0.0"
 # ENV APP_ROOT /var/www
 # ENV LANG=ja_JP.UTF-8
@@ -43,8 +50,8 @@ RUN apk add --no-cache mysql-client curl
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-RUN mkdir -p /var/www
-WORKDIR /var/www/
+RUN mkdir -p $APP_ROOT
+WORKDIR $APP_ROOT
 
 COPY --from=builder /var/www/public ./public
 
@@ -58,7 +65,7 @@ COPY --from=builder --chown=nextjs:nodejs /var/www/.next/static ./.next/static
 
 USER nextjs
 
-EXPOSE 3000
+EXPOSE 8000
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
