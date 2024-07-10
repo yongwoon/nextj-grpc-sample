@@ -20,6 +20,8 @@ services:
       - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
     depends_on:
       - backend
+    environment:
+      - ENVOY_LOG_LEVEL=trace
 
   frontend:
     container_name: dev_next_grpc_frontend
