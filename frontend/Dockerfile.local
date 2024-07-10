@@ -17,6 +17,14 @@ COPY ./package.json $APP_ROOT
 COPY ./package-lock.json $APP_ROOT
 RUN npm install
 
+# プロトコルバッファ生成スクリプトのコピー
+COPY ./generate_protos.sh $APP_ROOT
+
+# プロジェクトのコピー
 COPY . $APP_ROOT
 
-# CMD [ "npm", "run", "dev" ]
+# プロトコルバッファ生成スクリプトの実行
+RUN chmod +x ./generate_protos.sh && npm run gen:protos
+
+# 開発サーバーを実行
+CMD [ "npm", "run", "dev" ]

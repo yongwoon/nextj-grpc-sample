@@ -1,6 +1,3 @@
-# docs.google.com/spreadsheets/d/125B6eMj5bOJDxHY-QIlOlu-9ajSQjJqBtD_3dbczEBs/edit#gid=0
-# https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
-
 # base ----------------------------------------------------------------------
 FROM node:20.15.0-alpine AS base
 
@@ -21,6 +18,10 @@ RUN mkdir -p /var/www
 WORKDIR /var/www/
 COPY --from=deps /var/www/node_modules ./node_modules
 COPY . .
+
+# プロトコルバッファー生成スクリプトの実行
+COPY ./generate_protos.sh .
+RUN chmod +x ./generate_protos.sh && npm run gen:protos
 
 RUN npm run build
 
