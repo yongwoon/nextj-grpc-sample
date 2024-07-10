@@ -1,6 +1,6 @@
 services:
   app:
-    container_name: dev_nextjs_template_app
+    container_name: dev_next_grpc_app
     build:
       context: ./
       dockerfile: Dockerfile.local
@@ -12,10 +12,10 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - dev_nextjs_template_network
+      - dev_next_grpc_network
 
   # storybook:
-  #   container_name: dev_nextjs_template_storybook
+  #   container_name: dev_next_grpc_storybook
   #   build:
   #     context: ./
   #     dockerfile: Dockerfile.dev
@@ -26,10 +26,10 @@ services:
   #   ports:
   #     - '6006:6006'
   #   networks:
-  #     - dev_nextjs_template_network
+  #     - dev_next_grpc_network
 
   # db:
-  #   container_name: dev_nextjs_template_db
+  #   container_name: dev_next_grpc_db
   #   image: postgres:16.3
   #   ports:
   #     - 5432:5432
@@ -37,16 +37,16 @@ services:
   #     POSTGRES_USER: hmadmin
   #     POSTGRES_PASSWORD: password
   #     PGPASSWORD: password
-  #     POSTGRES_DB: dev_nextjs_template_development
+  #     POSTGRES_DB: dev_next_grpc_development
   #     TZ: "Asia/Tokyo"
   #   volumes:
-  #     - dev_nextjs_template_db_volume:/var/lib/postgresql/data
+  #     - dev_next_grpc_db_volume:/var/lib/postgresql/data
   #   networks:
-  #     - dev_nextjs_template_network
+  #     - dev_next_grpc_network
 
 networks:
-  dev_nextjs_template_network:
+  dev_next_grpc_network:
     external: true
 
 volumes:
-  dev_nextjs_template_db_volume:
+  dev_next_grpc_db_volume:

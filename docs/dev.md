@@ -9,7 +9,7 @@ cp .env.sample .env
 - Create Network (only one time)
 
 ```bash
-docker network create dev_nextjs_template_network
+docker network create dev_next_grpc_network
 ```
 
 - docker build
