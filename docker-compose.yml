@@ -11,7 +11,14 @@ services:
       - "50051:50051"
     networks:
       - dev_next_grpc_network
-
+  envoy:
+    image: envoyproxy/envoy:v1.30.4 # https://github.com/envoyproxy/envoy/tags
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./envoy/envoy.yaml:/etc/envoy/envoy.yaml
+    depends_on:
+      - backend
   frontend:
     container_name: dev_next_grpc_frontend
     build:
